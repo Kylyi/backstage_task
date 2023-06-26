@@ -12,6 +12,9 @@
     <NuxtLink to="/task">
       Go to task
     </NuxtLink>
+    <NuxtLink to="/products">
+      See products
+    </NuxtLink>
   </div>
 </template>
 
