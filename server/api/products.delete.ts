@@ -4,7 +4,7 @@ const prisma = new PrismaClient();
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
-  const newProduct = body as Product;
-  const result = await prisma.product.create({ data: newProduct });
+  const product = body as Product;
+  const result = await prisma.product.delete({ where: { id: product.id } });
   return result;
 });

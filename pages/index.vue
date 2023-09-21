@@ -17,7 +17,7 @@
       Products
     </NuxtLink>
 
-    <NuxtLink>
+    <NuxtLink to="/productForm">
       Create product
     </NuxtLink>
   </div>
