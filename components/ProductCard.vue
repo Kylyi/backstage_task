@@ -51,22 +51,4 @@ defineEmits(["deleteProduct"]);
     />
   </div>
 </template>
-<style scoped>
-.card {
-  height: 180px;
-  overflow: hidden;
-}
-.card :hover {
-  background-color: #ebebeb;
-  cursor: pointer;
-}
-.card-body {
-  padding-right: 0.25rem;
-}
 
-.card-text {
-  font: 14px;
-  max-height: 80px;
-  overflow: auto;
-}
-</style>
