@@ -11,25 +11,17 @@ defineEmits(["deleteProduct"]);
 </script>
 
 <template>
-  <div class="block items-card">
+  <div class="items-card">
     <UCard class="w-[350px] h-[400px] flex flex-col items-center relative">
       <template #header>
         <span class="absolute right-7 top-6 bg-gray-800 p-1 px-2 rounded-full"
           >{{ product.price }} $</span
         >
-
         <img
-          v-if="product.image"
-          :src="product.image"
-          class="rounded-t-md object-cover object-center"
-          :alt="product.title"
+        :src="product.image ?? 'https://placehold.co/600x400?text=Image+Not+Found'"
+        class="rounded-t-md object-cover object-center h-[220px]"
+        :alt="product.title"
         />
-        <div
-          v-else
-          class="rounded-md h-[100px] px-10 mt-20 flex items-center justify-center border"
-        >
-          No image
-        </div>
         <h2 class="text-center mt-2 text-2xl">{{ product.title }}</h2>
       </template>
       <div class="h-[60px] overflow-auto mb-4">
@@ -46,9 +38,8 @@ defineEmits(["deleteProduct"]);
     </UCard>
     <ProductModal
       v-model="isOpen"
-      @deleteProduct="$emit('deleteProduct')"
+      @deleteProduct="$emit('deleteProduct'), isOpen = false"
       @close="isOpen = false"
     />
   </div>
 </template>
-

@@ -1,5 +1,5 @@
 <script setup>
-defineEmits(["close"]);
+defineEmits(["close", "deleteProduct"]);
 </script>
 
 <template>
@@ -9,10 +9,7 @@ defineEmits(["close"]);
       <h2>Are you sure you want to delete the product?</h2>
       <div class="flex justify-between w-full">
         <UButton
-          @click="
-            $emit('deleteProduct');
-            isOpen = false;
-          "
+          @click="$emit('deleteProduct')"
           class="w-max"
           color="red"
           variant="solid"

@@ -1,16 +1,16 @@
 <script setup lang="ts">
 import { Product } from "@prisma/client";
-const { data } = await useFetch("/api/products");
+const { data, pending} = await useFetch("/api/products") 
 
 const products = ref<Product[]>(data);
 
-const deleteProduct = async (product: Product) => {
-  const res = await fetch(`/api/products`, {
-    body: JSON.stringify(product),
+const deleteProduct = async (id: Number) => {
+  const res = await $fetch('/api/products', {
     method: "DELETE",
+    body: id ,
   });
   console.log(res);
-  products.value = products.value.filter((p) => p.id !== product.id);
+  products.value = products.value.filter((p: Product) => p.id !== id);
 };
 </script>
 
@@ -30,17 +30,20 @@ const deleteProduct = async (product: Product) => {
     </template>
     <div
       class="w-[1500px] h-[800px] bg-gray-800 p-4 overflow-auto flex flex-col items-center rounded-md"
-    >
-      <div v-if="!products.length">
+      >
+      <div v-if="pending">
         <span class="">Loading...</span>
       </div>
+      <div v-else-if="products.length === 0">
+        <span>No products</span>
+    </div>
       <div v-else class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8">
         <TransitionGroup name="items">
           <ProductCard
             v-for="product in products"
             :key="product.id"
             :product="product"
-            @deleteProduct="deleteProduct(product)"
+            @deleteProduct="deleteProduct(product.id)"
           />
         </TransitionGroup>
       </div>

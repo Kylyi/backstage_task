@@ -3,41 +3,45 @@ interface IProduct {
   title: string;
   description: string;
   price: number;
-  image: FileList | null;
+  image: string | null;
 }
 const data: IProduct = reactive({
   title: "",
   description: "",
-  price: 0.0,
+  price: 0,
   image: null,
 });
+const imageData = ref<FileList | null>(null);
 
 const createProduct = async () => {
-  data.price = parseFloat(data.price);
-  const res = await fetch("/api/products", {
+  data.price = parseFloat(data.price.toString());
+  const res = await $fetch("/api/products", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
+    body: data,
   });
-  const result = await res.json();
-  console.log(result);
+  
+  console.log(res);
   data.title = "";
   data.description = "";
-  data.price = 0.0;
+  data.price = 0;
   data.image = null;
+  imageData.value = null;
 };
 const isValidate = computed(() => {
   return data.title != "" && data.description != "" && data.price > 0;
 });
-const handlePriceInput = (e: InputEvent) => {
-  const target = e.target as HTMLInputElement;
-  const value = target.value;
-  if (value) {
-    data.price = parseFloat(value);
+
+watch(
+  () => imageData.value,
+  (value) => {
+    const file = value?.[0];
+    if (!file) return;
+    const { base64 } = useBase64(file);
+    setTimeout(() => {
+        data.image = base64.value;
+    }, 100);
   }
-};
+);
 </script>
 
 <template>
@@ -67,15 +71,23 @@ const handlePriceInput = (e: InputEvent) => {
         <UFormGroup label="Price $" name="price">
           <UInput
             v-model="data.price"
-            @input="handlePriceInput"
+            type="number"
             placeholder="price"
             color="primary"
             variant="outline"
+            min="0"
+            step="0.1"
           />
         </UFormGroup>
-        <!-- <UFormGroup label="Image" name="image">
-        <FileInput class="w-max" v-model="data.image" />
-      </UFormGroup> -->
+        <UFormGroup label="Image (max 1 MB)" name="image">
+          <FileInput
+            class="w-max"
+            v-model="imageData"
+            :accept="'image/*'"
+            :maxFileSize="1024 * 1024"
+          />
+        </UFormGroup>
+
       </div>
       <footer class="flex justify-between w-full mt-4">
         <NuxtLink to="/">
