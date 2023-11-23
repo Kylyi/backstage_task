@@ -1,0 +1,9 @@
+export default interface Product {
+  id: number;
+  title: string;
+  description: string;
+  price: number;
+  image?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}

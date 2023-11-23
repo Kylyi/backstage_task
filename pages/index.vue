@@ -8,18 +8,13 @@
       <span class="font-bold">B</span>ack<span class="font-bold">S</span>tage
     </div>
 
-    <NuxtLink to="/task">
-      Task
-    </NuxtLink>
+    <NuxtLink to="/task"> Task </NuxtLink>
 
+    <NuxtLink to="/products"> Products </NuxtLink>
 
-    <NuxtLink to="/products">
-      Products
-    </NuxtLink>
+    <NuxtLink to="/add-product"> Add Product </NuxtLink>
 
-    <NuxtLink>
-      Create product
-    </NuxtLink>
+    <NuxtLink> Create product </NuxtLink>
   </div>
 </template>
 
@@ -30,7 +25,7 @@
   &-header {
     @apply text-3xl  border-2 p-2 rounded-md w-80 text-center
     bg-slate-500/50 text-slate-600 border-slate-600
-    dark:bg-slate-800/60 dark:text-slate-300 dark:border-slate-300
+    dark:bg-slate-800/60 dark:text-slate-300 dark:border-slate-300;
   }
 }
 </style>
