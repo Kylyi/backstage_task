@@ -1,9 +1,5 @@
-export type Product = {
+export type Product = ProductForm & {
   id?: number;
-  title: string;
-  description: string;
-  price: number;
-  image: string;
   createdAt?: string;
   updatedAt?: string;
 };
