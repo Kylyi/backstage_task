@@ -1,15 +1,29 @@
 <script setup lang="ts">
 import type { ProductForm } from "~/types/product";
+import { required } from "@vuelidate/validators";
+import type { FormError } from "@nuxthq/ui/dist/runtime/types";
+import { useVuelidate } from "@vuelidate/core";
 
 const emit = defineEmits<{
   (e: "updateProduct", productForm: ProductForm): void;
 }>();
+
 const productForm = ref<ProductForm>({
   title: "",
   description: "",
   price: "",
   image: null,
 });
+
+const rules = {
+  title: { required, $message: "Title is required" },
+  description: { required },
+  price: { required },
+};
+
+const v$ = useVuelidate<ProductForm>(rules, productForm);
+const fileSizeError = ref("");
+
 const submitDisabled = computed(
   () =>
     !productForm.value.title ||
@@ -17,22 +31,63 @@ const submitDisabled = computed(
     !productForm.value.price
 );
 
+watch(
+  () => productForm.value.image,
+  (value: FileList | null): void => {
+    validate(productForm.value);
+  }
+);
+
+async function validate(state: ProductForm): Promise<FormError[]> {
+  v$.value.$touch();
+  await v$.value.$validate();
+  const errors = [];
+  if (!state.title) {
+    errors.push({ path: "title", message: "Title is required" });
+  }
+  if (!state.description) {
+    errors.push({ path: "description", message: "Description is required" });
+  }
+  if (!state.price) {
+    errors.push({ path: "price", message: "Price is required" });
+  }
+  if (state.image?.length && state.image[0].size > 1048576) {
+    errors.push({ path: "image", message: "Image size must be less than 1MB" });
+    fileSizeError.value = "Image size must be less than 1MB";
+  } else {
+    fileSizeError.value = "";
+  }
+  return errors;
+}
+
 function saveProduct(): void {
   emit("updateProduct", productForm.value);
 }
 </script>
 <template>
-  <form class="product-form" @submit.prevent="saveProduct">
-    <UFormGroup label="Title" class="w-full p-2" required>
+  <UForm
+    :validate="validate"
+    :state="productForm"
+    class="product-form space-y-4"
+    @submit.prevent="saveProduct"
+  >
+    <UFormGroup class="w-full" label="Title" name="title">
       <UInput v-model="productForm.title" />
     </UFormGroup>
-    <UFormGroup label="Decription" class="w-full p-2" required>
-      <UTextarea v-model="productForm.description" />
+
+    <UFormGroup class="w-full" label="Description" name="description">
+      <UInput v-model="productForm.description" />
     </UFormGroup>
-    <UFormGroup label="Price" class="w-full p-2" required>
+
+    <UFormGroup class="w-full" label="Price" name="price">
       <UInput v-model="productForm.price" type="number" />
     </UFormGroup>
-    <UFormGroup label="Image" class="w-full p-2">
+    <UFormGroup
+      class="w-full"
+      label="Image"
+      name="image"
+      :error="fileSizeError"
+    >
       <FileInput v-model="productForm.image" />
     </UFormGroup>
 
@@ -44,7 +99,7 @@ function saveProduct(): void {
       type="submit"
       :disabled="submitDisabled"
     />
-  </form>
+  </UForm>
 </template>
 
 <style scoped>

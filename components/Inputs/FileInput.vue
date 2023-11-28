@@ -10,7 +10,16 @@ const emits = defineEmits<{
 
 // Layout
 const model = useVModel(props, "modelValue", emits);
-const { files, open, onChange } = useFileDialog({ multiple: false });
+const { files, open, reset, onChange } = useFileDialog({ multiple: false });
+
+watch(
+  () => props.modelValue,
+  (value: FileList | null): void => {
+    if (!value) {
+      reset();
+    }
+  }
+);
 
 onChange((files: FileList) => {
   model.value = files;
@@ -22,7 +31,6 @@ onChange((files: FileList) => {
     <UButton variant="outline" type="button" @click="open()"
       >Choose file</UButton
     >
-
     <ul>
       <li v-for="file in files" :key="file.name">
         {{ file.name }}
