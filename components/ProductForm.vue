@@ -28,7 +28,8 @@ const submitDisabled = computed(
   () =>
     !productForm.value.title ||
     !productForm.value.description ||
-    !productForm.value.price
+    !productForm.value.price ||
+    fileSizeError.value
 );
 
 watch(
