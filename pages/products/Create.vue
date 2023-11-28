@@ -26,7 +26,7 @@ async function onCreateProduct(product: ProductForm): Promise<void> {
     toast.add({
       title: "You have successfuly created a product",
     });
-    router.push("/products");
+    navigateTo("/products");
   }
 }
 </script>
