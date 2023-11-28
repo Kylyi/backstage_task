@@ -29,7 +29,7 @@ const submitDisabled = computed(
     !productForm.value.title ||
     !productForm.value.description ||
     !productForm.value.price ||
-    fileSizeError.value
+    !!fileSizeError.value
 );
 
 watch(
@@ -61,7 +61,7 @@ async function validate(state: ProductForm): Promise<FormError[]> {
   return errors;
 }
 
-function saveProduct(): void {
+function saveProduct(e: PointerEvent): void {
   emit("updateProduct", productForm.value);
 }
 </script>
@@ -70,7 +70,6 @@ function saveProduct(): void {
     :validate="validate"
     :state="productForm"
     class="product-form space-y-4"
-    @submit.prevent="saveProduct"
   >
     <UFormGroup class="w-full" label="Title" name="title">
       <UInput v-model="productForm.title" />
@@ -92,13 +91,17 @@ function saveProduct(): void {
       <FileInput v-model="productForm.image" />
     </UFormGroup>
 
+    <!-- had to create a workaround, since @submit.prevent is not working on UForm
+         will investigate more on this
+    -->
     <UButton
       label="Submit"
       color="primary"
       class="w-1/3 justify-center"
       variant="outline"
-      type="submit"
+      type="button"
       :disabled="submitDisabled"
+      @click.stop="saveProduct"
     />
   </UForm>
 </template>
