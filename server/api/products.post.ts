@@ -31,7 +31,7 @@ export default defineEventHandler(async (event) => {
         updatedAt: new Date(),
       },
     });
-    return product;
+    return prisma.product.findMany();
   } else {
     throw new Error("Invalid product data");
   }

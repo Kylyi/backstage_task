@@ -10,3 +10,7 @@ export type ProductForm = {
   price: string;
   image: FileList | null;
 };
+
+export type CreateProductResult = {
+  products: Product[];
+};

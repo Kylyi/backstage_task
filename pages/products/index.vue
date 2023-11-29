@@ -1,6 +1,11 @@
 <script lang="ts" setup>
-const { products, setProducts } = useProducts();
-setProducts();
+import { RequestStatus } from "~/types/request-status";
+
+const { products, loadingStatus, setProducts } = useProducts();
+
+if (loadingStatus.value === RequestStatus.IDLE) {
+  setProducts();
+}
 </script>
 
 <template>
